@@ -1,0 +1,3 @@
+/home/makarart/CLionProjects/The Game/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/makarart/CLionProjects/The Game/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/makarart/CLionProjects/The Game/cmake-build-debug/CMakeFiles/The_Game.dir
