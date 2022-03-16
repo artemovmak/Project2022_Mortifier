@@ -1,7 +1,11 @@
 #include "Farmer.h"
 
 Farmer::Farmer() {
+<<<<<<< HEAD
   f_texture.loadFromFile("../Farmer.png");
+=======
+  f_texture.loadFromFile("/home/makarart/CLionProjects/Slay've/Farmer.png");
+>>>>>>> f71f946... new directory
   f_sprite.setTexture(f_texture);
 
   f_position.x = 10;
