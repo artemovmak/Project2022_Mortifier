@@ -1,10 +1,12 @@
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
+#include <iostream>
 
 class Field {
 private:
-  int height = 100;
-  int width = 100;
-  sf::CircleShape field[100][100];
+  int height = 37;
+  int width = 23;
+  sf::CircleShape field[38][24];
 public:
   Field(int h, int w) {
     height = h;
@@ -15,19 +17,12 @@ public:
         field[i][j].setOutlineColor(sf::Color::Black);
         field[i][j].setOutlineThickness(5);
         field[i][j].setOrigin(25, 25);
-        field[i][j].setPosition((j % 2 == 1 ? 75 : 50) + i * 50.f, 50 + j * 40.f);
+        field[i][j].setPosition(static_cast<float>(j % 2 == 1 ? 75 : 50) + static_cast<float>(i)  * 50.f, 50 + static_cast<float>(j) * 40.f);
         field[i][j].setFillColor(sf::Color(128, 128, 128));
       }
     }
   }
-  /*void KeyChangeColor() {
-    static int i = 1;
-    static int j = 1;
-    field[0+i][0+j].setFillColor(sf::Color::Blue);
-    i++;
-    j++;
-  }*/
-  sf::CircleShape PrintField(int i, int j) {
+  sf::CircleShape& GetTile(int i, int j) {
     return field[i][j];
   }
   int GetHeight() const {
@@ -36,8 +31,23 @@ public:
   int GetWidth() const {
     return width;
   }
+  static sf::Vector2i GetMousePosition(const sf::RenderWindow &window) {
+    return sf::Mouse::getPosition(window);
+  }
+  bool IsInHex(sf::Vector2i point, sf::CircleShape hex) {
+    sf::Vector2f pointf = {float(point.x), float(point.y)};
+    sf::Vector2f point_v = pointf - hex.getPosition();
+    if (point_v.x * point_v.x + point_v.y * point_v.y < hex.getRadius() * hex.getRadius()) {
+      return true;
+    }
+    return false;
+  }
 };
 int main() {
+  sf::Music music;
+  music.openFromFile("../Boy.ogg");
+  music.play();
+  music.setLoop(true);
   sf::RenderWindow window(sf::VideoMode(2000, 1000), "SFML works!");
   while (window.isOpen()) {
     sf::Event event;
@@ -45,11 +55,15 @@ int main() {
       if (event.type == sf::Event::Closed)
         window.close();
     }
-    Field game(30, 20);
+    Field game(25, 20);
     window.clear();
+
     for (int i = 0; i < game.GetHeight(); i ++) {
       for (int j = 0; j < game.GetWidth(); j++) {
-        window.draw(game.PrintField(i, j));
+        if (game.IsInHex(sf::Mouse::getPosition(window), game.GetTile(i, j))) {
+          game.GetTile(i, j).setFillColor(sf::Color(150, 90, 100));
+        }
+        window.draw(game.GetTile(i, j));
       }
     }
     window.display();
